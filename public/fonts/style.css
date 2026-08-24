@@ -1,0 +1,24 @@
+
+@font-face {
+    font-family: 'Dangrek-Regular';
+    src: url('/fonts/Dangrek-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+@font-face {
+  font-family: 'Battambang-Regular';
+  src: url("/fonts/Battambang-Regular.ttf") format("truetype");
+}
+  
+@font-face {
+  font-family: 'AKbalthom-Moul-4';
+  src: url("/fonts/AKbalthom Moul 4 Version 1.10.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: 'SF-Pro';
+  src: url("/fonts/SF-Pro-Display-Medium.otf") format("truetype");
+}
+  
+

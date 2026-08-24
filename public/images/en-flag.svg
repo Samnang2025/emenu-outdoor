@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="32" viewBox="0 0 48 32">
+  <rect width="48" height="32" fill="#b22234"/>
+  <rect width="48" height="6.2857" y="6.2857" fill="#ffffff"/>
+  <rect width="48" height="6.2857" y="12.5714" fill="#b22234"/>
+  <rect width="48" height="6.2857" y="18.8571" fill="#ffffff"/>
+  <rect width="48" height="6.2857" y="25.1428" fill="#b22234"/>
+  <rect width="20" height="14" fill="#3c3b6e"/>
+  <g fill="#ffffff">
+    <circle cx="4" cy="3" r="0.9"/>
+    <circle cx="8" cy="3" r="0.9"/>
+    <circle cx="12" cy="3" r="0.9"/>
+    <circle cx="16" cy="3" r="0.9"/>
+
+    <circle cx="6" cy="6" r="0.9"/>
+    <circle cx="10" cy="6" r="0.9"/>
+    <circle cx="14" cy="6" r="0.9"/>
+  </g>
+</svg>

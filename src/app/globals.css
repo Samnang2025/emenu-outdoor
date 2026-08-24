@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'swiper/css';
+@import 'swiper/css/pagination';
+@import 'swiper/css/navigation';
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+.bg-whisper {
+    background-color: #F4F4F7;
+}
+
+.bg-safety-orange {
+    background-color: #ff5e0013;
+}
+
+.bg-orange {
+    background-color: #FF5C00;
+}
+
+.text-orange {
+    color: #FF5C00;
+}
+
+.font-dangrek {
+    font-family: "Dangrek-Regular";
+}
+
+.font-battambong {
+    font-family: 'Battambang-Regular';
+}
+
+.font-akbalthom-moul-4 {
+    font-family: "AKbalthom-Moul-4";
+}
+
+body {
+    color: #000000;
+}
+
+input::placeholder {
+    color: #9ca3af !important;
+}
+
+
+
+@layer utilities {
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        scrollbar-width: none;
+        /* Firefox */
+    }
+}
