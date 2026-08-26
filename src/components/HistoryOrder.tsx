@@ -42,7 +42,7 @@ export default function HistoryOrder({ cartItem, cur, index }: PropsType) {
                     <div>
                         <p className='font-battambong text-sm'>{displayName}</p>
                         <div className="space-x-3">
-                            <span className='text-orange-600 font-bold'>{cur || "$"}{promo_price ? real_price : actual_price}</span>
+                            <span className='text-black font-bold'>{cur || "$"}{promo_price ? real_price : actual_price}</span>
                             {
                                 promo_price && promo_price != price ? <span className="line-through">{cur || "$"}{actual_price}</span> : (<></>)
                             }

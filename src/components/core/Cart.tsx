@@ -87,7 +87,7 @@ export default function Cart({ cartItem, isOrderPage, cur }: PropType) {
           {isOrderPage && (
             <button
               // Sok Thean popup Component
-              className={`absolute bottom-2 right-2 flex justify-center items-center w-[40px] h-[40px] rounded-full z-20 border-2 border-white shadow-lg transition-all active:scale-90 ${eachItemOrderNumber > 0 ? "bg-orange text-black" : "bg-white text-orange"
+              className={`absolute bottom-2 right-2 flex justify-center items-center w-[40px] h-[40px] rounded-full z-20 border-2 border-white shadow-lg transition-all active:scale-90 ${eachItemOrderNumber > 0 ? "bg-black text-white" : "bg-white text-black"
                 }`}
               onClick={(e) => {
                 e.stopPropagation();
@@ -104,7 +104,7 @@ export default function Cart({ cartItem, isOrderPage, cur }: PropType) {
             {displayName}
           </h2>
           <div className="flex flex-col items-end">
-            <span className="text-[15px] text-orange-600 font-bold whitespace-nowrap">
+            <span className="text-[15px] text-black font-bold whitespace-nowrap">
               {cur || "$"}{promo_price ? real_price : actual_price}
             </span>
             {promo_price && (

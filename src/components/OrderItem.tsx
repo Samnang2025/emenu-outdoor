@@ -138,7 +138,7 @@ export default function OrderItem({ cur, historyOrder, setHistoryOrder, isClickO
                 ))
               }
             </div>
-            {basket.length == 0 ? (<></>) : (<button onClick={handleOrder} className="bg-orange font-dangrek p-2 px-5 rounded-full text-white mt-2">{t("placeOrder")}</button>)}
+            {basket.length == 0 ? (<></>) : (<button onClick={handleOrder} className="bg-black font-dangrek p-2 px-5 rounded-full text-white mt-2">{t("placeOrder")}</button>)}
 
             {/* history order section  */}
             {historyOrder ? (

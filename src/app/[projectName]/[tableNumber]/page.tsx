@@ -166,7 +166,7 @@ export default function Home() {
             <li
               key={item.category}
               onClick={() => handleScroll(index)}
-              className={`font-dangrek cursor-pointer text-nowrap max-[500px]:text-[14px] text-[17px] py-[5px] px-3 w-fit rounded-full border-orange-600 border-2 ${activeSection === index ? "text-orange-600" : "text-black"
+              className={`font-dangrek cursor-pointer text-nowrap max-[500px]:text-[14px] text-[17px] py-[5px] px-3 w-fit rounded-full border-black border-2 ${activeSection === index ? "text-black" : "text-black"
                 }`}
             >
               {item.category}
@@ -188,7 +188,7 @@ export default function Home() {
                 <li
                   key={subName}
                   onClick={() => handleSubScroll(`${data[activeSection].category}-${subName}`)}
-                  className={`font-battambong cursor-pointer text-nowrap max-[500px]:text-[16px] text-[16px] py-[3px] px-3 w-fit rounded-full border-gray-300 border ${activeSubSection === `${data[activeSection].category}-${subName}` ? "bg-orange-600 text-white border-orange-600" : "text-gray-900"
+                  className={`font-battambong cursor-pointer text-nowrap max-[500px]:text-[16px] text-[16px] py-[3px] px-3 w-fit rounded-full border-gray-300 border ${activeSubSection === `${data[activeSection].category}-${subName}` ? "bg-black text-white border-black" : "text-gray-900"
                     }`}
                 >
                   {subName}
@@ -371,7 +371,7 @@ export default function Home() {
                 console.error("Error posting data:", error);
               }
             }}
-            className="bg-gray-200 w-14 h-14 flex justify-center items-center rounded-full border-orange-600 border-2"
+            className="bg-gray-200 w-14 h-14 flex justify-center items-center rounded-full border-black border-2"
           >
             {/* Image icon */}
             <img

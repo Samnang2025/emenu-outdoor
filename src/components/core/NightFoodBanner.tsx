@@ -27,7 +27,7 @@ const NightFoodBanner: React.FC<PropType> = ({ images, imgUrl }) => {
         // pagination={{
         //   clickable: true,
         //   renderBullet: function (index, className) {
-        //     return `<span class="${className} !bg-orange-500"></span>`;
+        //     return `<span class="${className} !bg-black"></span>`;
         //   },
         // }}
         modules={[Autoplay, Pagination]}

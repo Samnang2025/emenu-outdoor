@@ -160,7 +160,7 @@ export default function TableSelectionPage() {
             placeholder={t("searchTable")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full py-3.5 pl-12 pr-4 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-gray-800 placeholder-gray-400 font-medium transition-all duration-200"
+            className="w-full py-3.5 pl-12 pr-4 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-gray-800 placeholder-gray-400 font-medium transition-all duration-200"
           />
           <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
             <svg
@@ -191,7 +191,7 @@ export default function TableSelectionPage() {
                   <button
                     onClick={() => setSelectedZone(zone)}
                     className={`text-nowrap px-4 py-2 text-xs font-semibold rounded-full border transition-all duration-200 ${isActive
-                      ? "bg-orange-600 border-orange-600 text-white shadow-md transform -translate-y-[1px]"
+                      ? "bg-black border-black text-white shadow-md transform -translate-y-[1px]"
                       : "bg-white border-gray-200 text-gray-700 hover:border-gray-300"
                       }`}
                   >

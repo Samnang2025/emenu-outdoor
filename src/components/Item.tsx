@@ -60,7 +60,7 @@ export default function Item({ cartItem, cur, index }: PropsType) {
                         )}
                         {/* End ST Add comment */}
                         <div className="space-x-3 ">
-                            <span className='text-orange-600 font-bold'>{cur || "$"}{promo_price ? real_price : actual_price}</span>
+                            <span className='text-black font-bold'>{cur || "$"}{promo_price ? real_price : actual_price}</span>
                             {
                                 promo_price ?
                                     (<span className="line-through">{cur || "$"}{actual_price}</span>) : ""
@@ -71,13 +71,13 @@ export default function Item({ cartItem, cur, index }: PropsType) {
                 {/* customize item  */}
                 <div className='flex flex-row items-center space-x-2'>
                     {/* delete button  */}
-                    <button onClick={() => handleRemove(cartItemId || id)} className='bg-orange-100 rounded-full w-8 h-8 flex justify-center items-center flex-shrink-0'>
+                    <button onClick={() => handleRemove(cartItemId || id)} className='bg-gray-200 rounded-full w-8 h-8 flex justify-center items-center flex-shrink-0'>
                         <img src={"/icons/delete.svg"} alt='' className='h-4 w-4' />
                     </button>
 
                     <button className='bg-gray-200  rounded-full w-[10px] h-[10px] p-4 flex justify-center items-center' onClick={() => handleQuantityChange(cartItem.quantity - 1)}>-</button>
                     <p>{quantity}</p>
-                    <button className=' text-white bg-orange rounded-full w-[10px] h-[10px] p-4 flex justify-center items-center' onClick={() => handleQuantityChange(cartItem.quantity + 1)}>+</button>
+                    <button className=' text-white bg-black rounded-full w-[10px] h-[10px] p-4 flex justify-center items-center' onClick={() => handleQuantityChange(cartItem.quantity + 1)}>+</button>
 
                 </div>
             </div>

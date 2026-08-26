@@ -14,7 +14,7 @@ export default function BasketBar({ cur, historyOrder }: any) {
 
   return (
     <>
-      <div className="flex space-x-1 rounded-full p-2 bg-orange text-[18px] max-[450px]:text-[17px] max-[415px]:text-[16px] text-white w-10/12 flex-row justify-between items-center">
+      <div className="flex space-x-1 rounded-full p-2 bg-black text-[18px] max-[450px]:text-[17px] max-[415px]:text-[16px] text-white w-10/12 flex-row justify-between items-center">
         <div
           className="flex flex-row justify-between items-center w-full"
           onClick={() => {

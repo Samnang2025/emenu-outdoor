@@ -73,7 +73,7 @@ export default function NightFoodCart({ cartItem, isOrderPage, cur }: PropType) 
           - {displayName} {/* AKK Translation */}
         </span>
         <div className="flex flex-col items-end">
-          <span className="text-[17px] text-orange-600 whitespace-nowrap font-bold">
+          <span className="text-[17px] text-black whitespace-nowrap font-bold">
             {cur || "$"}{promo_price ? real_price : actual_price}
           </span>
           {promo_price && (

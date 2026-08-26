@@ -96,7 +96,7 @@ const FoodItemModal: React.FC<PropType> = ({
               {displayName}
             </h2>
             <div className="flex flex-col items-end shrink-0 pt-1">
-              <span className="text-2xl text-start font-bold text-orange-600">
+              <span className="text-2xl text-start font-bold text-black">
                 {cur || "$"}{promo_price ? real_price : actual_price}
               </span>
               {promo_price && (
@@ -122,7 +122,7 @@ const FoodItemModal: React.FC<PropType> = ({
                       onClick={() => setSugarLevel(sugarLevel === level ? "" : level)}
                       className={`px-4 py-2 rounded-full text-sm font-battambong transition-all ${
                         sugarLevel === level
-                          ? "bg-orange text-white shadow-md scale-105"
+                          ? "bg-black text-white shadow-md scale-105"
                           : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                       }`}
                     >
@@ -144,7 +144,7 @@ const FoodItemModal: React.FC<PropType> = ({
                       onClick={() => setIceLevel(iceLevel === level ? "" : level)}
                       className={`px-4 py-2 rounded-full text-sm font-battambong transition-all ${
                         iceLevel === level
-                          ? "bg-orange text-white shadow-md scale-105"
+                          ? "bg-black text-white shadow-md scale-105"
                           : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                       }`}
                     >
@@ -164,7 +164,7 @@ const FoodItemModal: React.FC<PropType> = ({
             <textarea
               id="item-comment"
               rows={1}
-              className="w-full p-4 bg-gray-50 rounded-xl border border-gray-100 focus:bg-white focus:border-orange focus:ring-4 focus:ring-orange/10 outline-none transition-all duration-300 resize-none text-gray-800 placeholder:text-gray-400 font-battambong shadow-inner hover:shadow-md"
+              className="w-full p-4 bg-gray-50 rounded-xl border border-gray-100 focus:bg-white focus:border-black focus:ring-4 focus:ring-black/10 outline-none transition-all duration-300 resize-none text-gray-800 placeholder:text-gray-400 font-battambong shadow-inner hover:shadow-md"
               placeholder={t("commentPlaceholder")}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
@@ -174,7 +174,7 @@ const FoodItemModal: React.FC<PropType> = ({
           {/* Add to Cart Button */}
           <button
             onClick={handleAdd}
-            className="w-full bg-orange text-white py-4 rounded-xl font-bold text-lg hover:bg-orange/90 transition-transform active:scale-95 flex items-center justify-center gap-2"
+            className="w-full bg-black text-white py-4 rounded-xl font-bold text-lg hover:bg-black/90 transition-transform active:scale-95 flex items-center justify-center gap-2"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />

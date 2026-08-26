@@ -65,7 +65,7 @@ export default function InforCard({ children, title, logo }: propTypes) {
               </Link>
             </div>
 
-            <div className="flex font-battambong space-x-2 mt-5  p-4 w-full justify-center bg-orange-100">
+            <div className="flex font-battambong space-x-2 mt-5  p-4 w-full justify-center bg-gray-200">
               <img className="w-5" src={"/icons/call.svg"} alt="" width={100} height={100} />
               <h1 className="text-orange-500">លេខទំនាក់ទំនង / Hotline: <Link href={`tel:+855${info?.phone_num}`}>{info?.phone_num}</Link> </h1>
             </div>
