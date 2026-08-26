@@ -38,7 +38,7 @@ export default function NightFoodCart({ cartItem, isOrderPage, cur }: PropType) 
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const imgUrl = `https://tonle-coffee.pos.tsdsolution.net/assets/uploads/`;
+  const imgUrl = `https://pos-outdoor.tsdsolution.net/assets/uploads/`;
 
   const handleOrder = (comment?: string) => {
     setOrderItem((prev) => prev + 1);

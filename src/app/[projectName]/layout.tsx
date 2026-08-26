@@ -11,11 +11,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 export async function generateMetadata({ params }: { params: { projectName: string } }): Promise<Metadata> {
   try {
-    const response = await axios.get(`https://tonle-coffee.pos.tsdsolution.net/api/DriverController/setting`);
+    const response = await axios.get(`https://pos-outdoor.tsdsolution.net/api/DriverController/setting`);
     const data = response.data;
     return {
       title: data.site_name,
-      icons: `https://tonle-coffee.pos.tsdsolution.net/assets/uploads/logos/${data.logo}`
+      icons: `https://pos-outdoor.tsdsolution.net/assets/uploads/logos/${data.logo}`
     };
   } catch (error) {
     console.error("Error fetching metadata:", error);

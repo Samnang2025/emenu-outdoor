@@ -17,7 +17,7 @@ type propsType = {
 const ImageSlider = ({ images }: propsType) => {
   const { projectName } = useParams()
 
-  const imgUrl = `https://tonle-coffee.pos.tsdsolution.net/assets/uploads/`;
+  const imgUrl = `https://pos-outdoor.tsdsolution.net/assets/uploads/`;
 
   return (
     <Swiper

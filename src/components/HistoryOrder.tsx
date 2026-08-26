@@ -22,7 +22,7 @@ export default function HistoryOrder({ cartItem, cur, index }: PropsType) {
     const actual_price = numeral(price).format('0.[00]');
     const qty = numeral(quantity).format('0')
     // Construct image URL
-    const imgUrl = `https://tonle-coffee.pos.tsdsolution.net/assets/uploads/`;
+    const imgUrl = `https://pos-outdoor.tsdsolution.net/assets/uploads/`;
 
     return (
         <>

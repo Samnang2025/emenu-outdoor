@@ -22,7 +22,7 @@ export default function Item({ cartItem, cur, index }: PropsType) {
     //End AKK Translation
     const real_price = numeral(promo_price).format('0.[00]')
     const actual_price = numeral(price).format('0.[00]')
-    const imgUrl = `https://tonle-coffee.pos.tsdsolution.net/assets/uploads/`
+    const imgUrl = `https://pos-outdoor.tsdsolution.net/assets/uploads/`
     const dispatch = useDispatch();
     const handleQuantityChange = (newQuantity: number) => {
         if (newQuantity > 0) {

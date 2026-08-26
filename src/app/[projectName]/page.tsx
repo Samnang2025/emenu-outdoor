@@ -64,14 +64,14 @@ export default function TableSelectionPage() {
       try {
         // Fetch branding & tables in parallel
         const [brandRes, tablesRes] = await Promise.allSettled([
-          axios.get(`https://tonle-coffee.pos.tsdsolution.net/api/DriverController/setting`),
-          axios.get(`https://tonle-coffee.pos.tsdsolution.net/api/DriverController/tables`)
+          axios.get(`https://pos-outdoor.tsdsolution.net/api/DriverController/setting`),
+          axios.get(`https://pos-outdoor.tsdsolution.net/api/DriverController/tables`)
         ]);
 
         if (brandRes.status === "fulfilled" && brandRes.value.data) {
           setStoreInfo({
-            siteName: brandRes.value.data.site_name || "Tonle Coffee",
-            logoUrl: `https://tonle-coffee.pos.tsdsolution.net/assets/uploads/logos/${brandRes.value.data.logo}`
+            siteName: brandRes.value.data.site_name || "OUTDOOR ស៊ុបខ្យង",
+            logoUrl: `https://pos-outdoor.tsdsolution.net/assets/uploads/logos/${brandRes.value.data.logo}`
           });
         }
 
@@ -191,8 +191,8 @@ export default function TableSelectionPage() {
                   <button
                     onClick={() => setSelectedZone(zone)}
                     className={`text-nowrap px-4 py-2 text-xs font-semibold rounded-full border transition-all duration-200 ${isActive
-                        ? "bg-orange-600 border-orange-600 text-white shadow-md transform -translate-y-[1px]"
-                        : "bg-white border-gray-200 text-gray-700 hover:border-gray-300"
+                      ? "bg-orange-600 border-orange-600 text-white shadow-md transform -translate-y-[1px]"
+                      : "bg-white border-gray-200 text-gray-700 hover:border-gray-300"
                       }`}
                   >
                     {displayZone}
@@ -214,15 +214,15 @@ export default function TableSelectionPage() {
                     key={table.id}
                     onClick={() => handleTableSelect(table.id)}
                     className={`group relative flex flex-col justify-center items-center py-6 px-3 border rounded-2xl transition-all duration-300 hover:scale-[1.04] active:scale-[0.97] shadow-sm ${isOccupied
-                        ? "bg-red-300 border-rose-200/80 hover:border-rose-400 text-white hover:shadow-[0_8px_20px_rgba(239,68,68,0.1)]"
-                        : "bg-sky-50 hover:bg-sky-100/70 border-sky-200/80 hover:border-sky-400 text-sky-950 hover:shadow-[0_8px_20px_rgba(14,165,233,0.1)]"
+                      ? "bg-red-300 border-rose-200/80 hover:border-rose-400 text-white hover:shadow-[0_8px_20px_rgba(239,68,68,0.1)]"
+                      : "bg-sky-50 hover:bg-sky-100/70 border-sky-200/80 hover:border-sky-400 text-sky-950 hover:shadow-[0_8px_20px_rgba(14,165,233,0.1)]"
                       }`}
                   >
                     {/* Status Pill Badge */}
                     <span
                       className={`absolute top-2 right-2 text-[8px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wider ${isOccupied
-                          ? "bg-red-500 text-white animate-pulse"
-                          : "bg-sky-500 text-white"
+                        ? "bg-red-500 text-white animate-pulse"
+                        : "bg-sky-500 text-white"
                         }`}
                     >
                       {isOccupied ? t("occupied") : t("available")}

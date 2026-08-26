@@ -108,7 +108,7 @@ const FoodItemModal: React.FC<PropType> = ({
           </div>
 
           {/* Drink Customization */}
-          {brand === "Drink" && (
+          {brand === "Drinks" && (
             <div className="mb-6 space-y-4">
               {/* Sugar Level */}
               <div>

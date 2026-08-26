@@ -32,7 +32,7 @@ export default function Home() {
         const formData = new FormData();
         formData.append("table_num", `${tableNumber}`);
         const response = await axios.post(
-          `https://tonle-coffee.pos.tsdsolution.net/api/DriverController/orders`,
+          `https://pos-outdoor.tsdsolution.net/api/DriverController/orders`,
           formData
         );
         setHistoryOrder(response.data);
@@ -58,13 +58,13 @@ export default function Home() {
   const [cur, setCur] = useState(null);
 
 
-  const imgUrl = `https://tonle-coffee.pos.tsdsolution.net/assets/uploads/`;
+  const imgUrl = `https://pos-outdoor.tsdsolution.net/assets/uploads/`;
 
   // Fetch data on component mount
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await axios.get(`https://tonle-coffee.pos.tsdsolution.net/api/DriverController/setting`);
+        const response = await axios.get(`https://pos-outdoor.tsdsolution.net/api/DriverController/setting`);
         const data = response.data
         console.log("Data fetched successfully", response.data);
         const correctedSlideShow = data.slide_Show.replace(/,\s*]$/, ']');
@@ -81,7 +81,7 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://tonle-coffee.pos.tsdsolution.net/api/DriverController/GetAllProductWithCat?t=${Date.now()}` //Sok Thean Add t=${Date.now()} to prevent caching
+          `https://pos-outdoor.tsdsolution.net/api/DriverController/GetAllProductWithCat?t=${Date.now()}` //Sok Thean Add t=${Date.now()} to prevent caching
         );
 
         const dataJson: MenuType = response.data;

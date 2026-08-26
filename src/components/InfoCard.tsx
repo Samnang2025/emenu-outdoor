@@ -16,7 +16,7 @@ export default function InforCard({ children, title, logo }: propTypes) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://tonle-coffee.pos.tsdsolution.net/api/DriverController/e_orderConfig`);
+        const response = await axios.get(`https://pos-outdoor.tsdsolution.net/api/DriverController/e_orderConfig`);
         const data = response.data;
         setInfo(data);
         console.log("fetch icons", data);
@@ -35,16 +35,16 @@ export default function InforCard({ children, title, logo }: propTypes) {
         <div className="modal-box p-0 bg-white">
           <form method="dialog">
             {/* if there is a button in form, it will close the modal */}
-            <button className="btn text-white btn-sm btn-circle btn-ghost absolute right-2 top-2 text-xl  z-10">
+            <button className="text-white bg-black w-8 h-8 rounded-full absolute right-2 top-2 text-xl flex items-center justify-center z-10 hover:bg-gray-800 transition-colors">
               ✕
             </button>
           </form>
           <div className="flex flex-col  items-center ">
             <div className="h-[200px] w-full mb-20 relative">
               <img src="/images/well.jpg" className="object-cover w-full h-full " width={1000} height={1000} alt="" />
-              {/* <img src={`https://tonle-coffee.pos.tsdsolution.net/assets/uploads/logos/${info?.hero}`} className="object-cover w-full h-full " width={10000} height={10000} alt="" /> */}
-              <div className={"w-28 h-28 rounded-full flex justify-center items-center absolute border-2 border-gray-400 bottom-[-60px]  bg-white left-1/2 transform -translate-x-1/2"}>
-                <img className="object-cover " src={`https://tonle-coffee.pos.tsdsolution.net/assets/uploads/logos/${logo}`} alt="" width={1000} height={1000} />
+              {/* <img src={`https://pos-outdoor.tsdsolution.net/assets/uploads/logos/${info?.hero}`} className="object-cover w-full h-full " width={10000} height={10000} alt="" /> */}
+              <div className={"w-28 h-28 rounded-full flex justify-center items-center absolute bottom-[-60px] left-1/2 transform -translate-x-1/2"}>
+                <img className="object-cover " src={`https://pos-outdoor.tsdsolution.net/assets/uploads/logos/${logo}`} alt="" width={1000} height={1000} />
               </div>
             </div>
             <p className="font-akbalthom-moul-4 text-center text-2xl text-gray-800">{title}</p>
@@ -52,15 +52,15 @@ export default function InforCard({ children, title, logo }: propTypes) {
               Contact us through our official social media channels</p>
             <div className="flex flex-row space-x-6 mt-5">
               {/* Google Map */}
-              <Link href={info?.googlemap || "https://maps.app.goo.gl/HwjG8EuDrrMeAmrY6?g_st=it"}>
+              <Link href={info?.googlemap || "#"}>
                 <img className="w-10 h-10 hover:scale-110 transition-transform" src="/icons/map.svg" alt="Google Map" width={40} height={40} />
               </Link>
               {/* Telegram */}
-              <Link href={info?.telegram || "https://t.me/@tonle168"}>
+              <Link href={info?.telegram || "#"}>
                 <img className="w-10 h-10 hover:scale-110 transition-transform" src="/icons/telegram.svg" alt="Telegram" width={40} height={40} />
               </Link>
               {/* Tiktok */}
-              <Link href={info?.tiktok || "https://www.tiktok.com/@tonl.noodle.and.c?_r=1"}>
+              <Link href={info?.tiktok || "#"}>
                 <img className="w-10 h-10 hover:scale-110 transition-transform" src="/icons/tiktok.svg" alt="Tiktok" width={40} height={40} />
               </Link>
             </div>
