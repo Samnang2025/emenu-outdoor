@@ -8,14 +8,18 @@ import InforCard from '../InfoCard';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 
-interface PropType {
+interface MetadataType {
   title: string;
   icons: string;
 }
 
-export default function NavBar() {
+interface NavBarProps {
+  isViewOnly?: boolean;
+}
+
+export default function NavBar({ isViewOnly = false }: NavBarProps) {
   const { t } = useTranslation();
-  const [metadata, setMetadata] = useState<PropType | undefined>();
+  const [metadata, setMetadata] = useState<MetadataType | undefined>();
   const { projectName } = useParams();
   const router = useRouter();
   useEffect(() => {
@@ -48,15 +52,17 @@ export default function NavBar() {
       {/* Information Card Section */}
       <InforCard title={metadata?.title || ''} logo={metadata?.icons || ''}>
         <div className='flex justify-center items-center gap-2 h-[22px] rounded-md py-4 px-2'>
-          <button
-            onClick={() => router.push(`/${projectName}`)}
-            className='flex items-center gap-1 font-battambong text-[14px] text-gray-500 border border-gray-400 rounded-full px-2 py-1 hover:bg-gray-50 transition-colors whitespace-nowrap'
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5 text-gray-500">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
-            </svg>
-            <span>{t("changeTable")}</span>
-          </button>
+          {!isViewOnly && (
+            <button
+              onClick={() => router.push(`/${projectName}`)}
+              className='flex items-center gap-1 font-battambong text-[14px] text-gray-500 border border-gray-400 rounded-full px-2 py-1 hover:bg-gray-50 transition-colors whitespace-nowrap'
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5 text-gray-500">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+              </svg>
+              <span>{t("changeTable")}</span>
+            </button>
+          )}
           <button
             onClick={() => (document.getElementById("my_modal_2") as HTMLDialogElement).showModal()}
             className='flex items-center gap-1 font-battambong text-[14px] text-gray-500 border border-gray-400 rounded-full px-2 py-1 hover:bg-gray-50 transition-colors whitespace-nowrap'

@@ -73,8 +73,8 @@ export default function Cart({ cartItem, isOrderPage, cur }: PropType) {
   return (
     <>
       <div className="card w-[49%]">
-        <div className="w-full rounded-xl overflow-hidden  relative">
-          <button onClick={() => isOrderPage && setIsModalOpen(true)} className="w-full h-full "> {/* Sok Thean popup Component */}
+        <div className="w-full rounded-xl overflow-hidden relative">
+          <button onClick={() => setIsModalOpen(true)} className="w-full h-full"> {/* Sok Thean popup Component */}
             <img
               className="object-cover w-full h-[200px]"
               src={`${imgUrl}${cartItem.imagePath}`}
@@ -99,7 +99,7 @@ export default function Cart({ cartItem, isOrderPage, cur }: PropType) {
             </button>
           )}
         </div>
-        <div className="card-body px-1 py-1 flex justify-between items-start gap-y-0" onClick={() => isOrderPage && setIsModalOpen(true)}> {/* Sok Thean popup Component */}
+        <div className="card-body px-1 py-1 flex justify-between items-start gap-y-0 cursor-pointer" onClick={() => setIsModalOpen(true)}> {/* Sok Thean popup Component */}
           <h2 className="card-title text-[16px] font-battambong font-extralight leading-tight text-black">
             {displayName}
           </h2>
@@ -123,6 +123,7 @@ export default function Cart({ cartItem, isOrderPage, cur }: PropType) {
         cur={cur}
         onAdd={(comment) => handleOrder(comment)} //Sok Thean Add comment
         imgUrl={imgUrl}
+        isOrderPage={isOrderPage}
       />
       {/* End popup Component */}
     </>

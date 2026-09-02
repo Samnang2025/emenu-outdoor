@@ -145,10 +145,19 @@ export default function TableSelectionPage() {
   return (
     <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center px-4 py-6 font-battambong">
       {/* Premium Header Branding */}
-      <div className="w-full max-w-[575px] flex flex-col items-center text-center mt-4 mb-8">
+      <div className="w-full max-w-[575px] flex flex-col items-center text-center mt-4 mb-6">
         <p className="text-lg text-red-500 mt-2 max-w-[80%]">
           {t("selectTableSubtitle")}
         </p>
+        <button
+          onClick={() => router.push(`/${projectName}/menu`)}
+          className="mt-3 inline-flex items-center gap-2 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 shadow-sm px-4 py-2 rounded-full text-sm font-medium transition-all hover:border-black"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-4 h-4 text-gray-600">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+          </svg>
+          <span>{t("viewMenuOnly")}</span>
+        </button>
       </div>
 
       {/* Main Container */}

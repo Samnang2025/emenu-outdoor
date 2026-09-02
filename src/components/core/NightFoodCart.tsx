@@ -67,7 +67,7 @@ export default function NightFoodCart({ cartItem, isOrderPage, cur }: PropType) 
     <>
       <div
         className="w-full py-1 cursor-pointer flex justify-between items-start gap-2"
-        onClick={() => isOrderPage && setIsModalOpen(true)}
+        onClick={() => setIsModalOpen(true)}
       >
         <span className="font-battambong text-[20px] text-black">
           - {displayName} {/* AKK Translation */}
@@ -91,6 +91,7 @@ export default function NightFoodCart({ cartItem, isOrderPage, cur }: PropType) 
         cur={cur}
         onAdd={(comment) => handleOrder(comment)}
         imgUrl={imgUrl}
+        isOrderPage={isOrderPage}
       />
     </>
   );

@@ -55,5 +55,9 @@
     "tableSelected": "Selected",
     "occupied": "Occupied",
     "available": "Available",
-    "changeTable": "Change Table"
+    "changeTable": "Change Table",
+    "viewMenuOnly": "View Menu Only",
+    "orderAtTable": "Select Table to Order",
+    "viewOnlyNotice": "Menu View Mode (Ordering Disabled)",
+    "close": "Close"
 }

@@ -10,10 +10,11 @@ import { createPortal } from "react-dom";
 type PropType = {
   cartItem: Menu;
   cur: any;
-  onAdd: (comment: string) => void;
+  onAdd?: (comment: string) => void;
   isOpen: boolean;
   onClose: () => void;
   imgUrl: string;
+  isOrderPage?: boolean;
 };
 
 const FoodItemModal: React.FC<PropType> = ({
@@ -23,6 +24,7 @@ const FoodItemModal: React.FC<PropType> = ({
   isOpen,
   onClose,
   imgUrl,
+  isOrderPage = true,
 }) => {
   const [comment, setComment] = useState("");
   const [sugarLevel, setSugarLevel] = useState("");
@@ -47,7 +49,7 @@ const FoodItemModal: React.FC<PropType> = ({
 
   const handleAdd = () => {
     let finalComment = comment;
-    if (brand === "Drink") {
+    if (brand === "Drinks" || brand === "Drink") {
       const selections = [];
       if (sugarLevel) selections.push(`Sugar: ${sugarLevel}`);
       if (iceLevel) selections.push(`Ice: ${iceLevel}`);
@@ -57,7 +59,9 @@ const FoodItemModal: React.FC<PropType> = ({
         finalComment = comment ? `${customization} ${comment}` : customization;
       }
     }
-    onAdd(finalComment);
+    if (onAdd) {
+      onAdd(finalComment);
+    }
     setComment(""); // Reset comment after adding
     setSugarLevel(""); // Reset sugar
     setIceLevel(""); // Reset ice
@@ -107,8 +111,8 @@ const FoodItemModal: React.FC<PropType> = ({
             </div>
           </div>
 
-          {/* Drink Customization */}
-          {brand === "Drinks" && (
+          {/* Drink Customization (Ordering mode only) */}
+          {isOrderPage && brand === "Drinks" && (
             <div className="mb-6 space-y-4">
               {/* Sugar Level */}
               <div>
@@ -156,31 +160,42 @@ const FoodItemModal: React.FC<PropType> = ({
             </div>
           )}
 
-          {/* Comment Field */}
-          <div className="mb-2">
-            <label htmlFor="item-comment" className="block text-sm font-battambong font-semibold text-gray-700 mb-2">
-              {t("optionalCommentLabel")}
-            </label>
-            <textarea
-              id="item-comment"
-              rows={1}
-              className="w-full p-4 bg-gray-50 rounded-xl border border-gray-100 focus:bg-white focus:border-black focus:ring-4 focus:ring-black/10 outline-none transition-all duration-300 resize-none text-gray-800 placeholder:text-gray-400 font-battambong shadow-inner hover:shadow-md"
-              placeholder={t("commentPlaceholder")}
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            />
-          </div>
+          {/* Comment Field (Ordering mode only) */}
+          {isOrderPage && (
+            <div className="mb-2">
+              <label htmlFor="item-comment" className="block text-sm font-battambong font-semibold text-gray-700 mb-2">
+                {t("optionalCommentLabel")}
+              </label>
+              <textarea
+                id="item-comment"
+                rows={1}
+                className="w-full p-4 bg-gray-50 rounded-xl border border-gray-100 focus:bg-white focus:border-black focus:ring-4 focus:ring-black/10 outline-none transition-all duration-300 resize-none text-gray-800 placeholder:text-gray-400 font-battambong shadow-inner hover:shadow-md"
+                placeholder={t("commentPlaceholder")}
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+            </div>
+          )}
 
-          {/* Add to Cart Button */}
-          <button
-            onClick={handleAdd}
-            className="w-full bg-black text-white py-4 rounded-xl font-bold text-lg hover:bg-black/90 transition-transform active:scale-95 flex items-center justify-center gap-2"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            <span className="font-battambong" style={{"fontWeight": "normal"}}>{t("addToBasketLabel")}</span>
-          </button>
+          {/* Action Button */}
+          {isOrderPage ? (
+            <button
+              onClick={handleAdd}
+              className="w-full bg-black text-white py-4 rounded-xl font-bold text-lg hover:bg-black/90 transition-transform active:scale-95 flex items-center justify-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              <span className="font-battambong" style={{"fontWeight": "normal"}}>{t("addToBasketLabel")}</span>
+            </button>
+          ) : (
+            <button
+              onClick={onClose}
+              className="w-full bg-gray-100 text-gray-800 py-3 rounded-xl font-medium text-base hover:bg-gray-200 transition-colors flex items-center justify-center font-battambong"
+            >
+              {t("close")}
+            </button>
+          )}
         </div>
       </div>
     </div>,

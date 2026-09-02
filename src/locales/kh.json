@@ -55,5 +55,9 @@
     "tableSelected": "បានជ្រើសរើស",
     "occupied": "មានភ្ញៀវ",
     "available": "ទំនេរ",
-    "changeTable": "តុ"
+    "changeTable": "តុ",
+    "viewMenuOnly": "មើលបញ្ជីមុខម្ហូប",
+    "orderAtTable": "ជ្រើសរើសតុដើម្បីកម្ម៉ង់",
+    "viewOnlyNotice": "ទំព័រមើលបញ្ជីមុខម្ហូប (មិនអាចកម្ម៉ង់បានទេ)",
+    "close": "បិទ"
 }
