@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { Provider } from "react-redux";
 import store from "@/lib/store";
@@ -16,9 +16,6 @@ import {
   NightFoodCart,
   NightFoodBanner,
 } from "@/components/core";
-
-const OrderItem = dynamic(() => import("@/components/OrderItem"), { ssr: false });
-const Model = dynamic(() => import("@/components/Model"), { ssr: false });
 import {
   IMG_BASE_URL,
   OrderConfig,
@@ -27,11 +24,18 @@ import {
 } from "@/lib/api";
 import {
   fetchClientMenu,
+  fetchClientOrderConfig,
   fetchClientSettings,
   fetchTableHistoryOrder,
   getCachedClientEntry,
+  hasPendingHeadPrefetch,
   seedClientCache,
 } from "@/lib/clientApi";
+
+const OrderItem = dynamic(() => import("@/components/OrderItem"), { ssr: false });
+const Model = dynamic(() => import("@/components/Model"), { ssr: false });
+
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 const NIGHT_FOOD_CATEGORY = "ម្ហូបយប់";
 const RIVER_SNACK_CATEGORY = "គ្រឿងក្លែមទន្លេ";
@@ -61,17 +65,17 @@ function groupItemsBySubcategory(items: Menu[]): SubcategoryGroup[] {
 
 export type MenuPageClientProps = {
   isOrderPage: boolean;
-  initialMenu: MenuType | null;
-  initialSettings: StoreSettings | null;
-  initialConfig: OrderConfig | null;
+  initialMenu?: MenuType | null;
+  initialSettings?: StoreSettings | null;
+  initialConfig?: OrderConfig | null;
   initialAgeMs?: number;
 };
 
 export default function MenuPageClient({
   isOrderPage,
-  initialMenu,
-  initialSettings,
-  initialConfig,
+  initialMenu = null,
+  initialSettings = null,
+  initialConfig = null,
   initialAgeMs = 0,
 }: MenuPageClientProps) {
   const { projectName, tableNumber } = useParams();
@@ -83,6 +87,7 @@ export default function MenuPageClient({
   const [isNotFound, setNotFound] = useState(false);
 
   const [settings, setSettings] = useState<StoreSettings | null>(initialSettings);
+  const [config, setConfig] = useState<OrderConfig | null>(initialConfig);
   const [historyOrder, setHistoryOrder] = useState<orderHistoryType | null>(null);
   const [historyOrderLoaded, setHistoryOrderLoaded] = useState(false);
   const [isClickOrder, setClickOrder] = useState(false);
@@ -93,17 +98,49 @@ export default function MenuPageClient({
   const ref = useRef<(HTMLDivElement | null)[]>([]);
   const subRef = useRef<Record<string, HTMLDivElement | null>>({});
 
-  // Seed client caches and handle fallback / background refresh
+  // Synchronously populate from localStorage/memory cache before first paint to avoid loading spinner flash
+  useIsomorphicLayoutEffect(() => {
+    if (!hasInitialMenu) {
+      const cachedMenu = getCachedClientEntry<MenuType>("menu");
+      if (cachedMenu?.data?.length) {
+        setData(cachedMenu.data);
+        setLoading(false);
+      }
+    }
+    if (!initialSettings) {
+      const cachedSettings = getCachedClientEntry<StoreSettings>("setting")?.data;
+      if (cachedSettings) {
+        setSettings(cachedSettings);
+      }
+    }
+    if (!initialConfig) {
+      const cachedConfig = getCachedClientEntry<OrderConfig>("e_orderConfig")?.data;
+      if (cachedConfig) {
+        setConfig(cachedConfig);
+      }
+    }
+  }, [hasInitialMenu, initialSettings, initialConfig]);
+
+  // Keep document title in sync with fetched store settings
+  useEffect(() => {
+    if (settings?.site_name) {
+      document.title = settings.site_name;
+    }
+  }, [settings?.site_name]);
+
+  // Seed client caches and consume <head> prefetch or refresh stale data in background
   useEffect(() => {
     let cancelled = false;
 
     if (initialSettings) {
       seedClientCache("setting", initialSettings);
     } else {
-      const cachedSettings = getCachedClientEntry<StoreSettings>("setting")?.data;
-      if (cachedSettings) {
-        setSettings(cachedSettings);
-      } else {
+      const cachedSettings = getCachedClientEntry<StoreSettings>("setting");
+      const shouldFetchSettings =
+        hasPendingHeadPrefetch("setting") ||
+        !cachedSettings ||
+        Date.now() - cachedSettings.fetchedAt >= 300_000;
+      if (shouldFetchSettings) {
         fetchClientSettings()
           .then((res) => {
             if (!cancelled && res) setSettings(res);
@@ -114,6 +151,19 @@ export default function MenuPageClient({
 
     if (initialConfig) {
       seedClientCache("e_orderConfig", initialConfig);
+    } else {
+      const cachedConfig = getCachedClientEntry<OrderConfig>("e_orderConfig");
+      const shouldFetchConfig =
+        hasPendingHeadPrefetch("config") ||
+        !cachedConfig ||
+        Date.now() - cachedConfig.fetchedAt >= 300_000;
+      if (shouldFetchConfig) {
+        fetchClientOrderConfig()
+          .then((res) => {
+            if (!cancelled && res) setConfig(res);
+          })
+          .catch((err) => console.error("Error fetching store config:", err));
+      }
     }
 
     if (hasInitialMenu && initialMenu) {
@@ -127,36 +177,36 @@ export default function MenuPageClient({
             );
           })
           .catch(() => {
-            // Keep rendered SSR menu if background refresh fails
+            // Keep rendered menu if background refresh fails
           });
       }
     } else {
       const cachedMenu = getCachedClientEntry<MenuType>("menu");
-      if (cachedMenu?.data?.length) {
-        setData(cachedMenu.data);
-        setLoading(false);
-      }
-
+      const hasCached = Boolean(cachedMenu?.data?.length);
       const needsRefresh =
-        !cachedMenu?.data?.length || Date.now() - cachedMenu.fetchedAt >= CLIENT_REVALIDATE_MS;
+        hasPendingHeadPrefetch("menu") ||
+        !hasCached ||
+        Date.now() - (cachedMenu?.fetchedAt || 0) >= CLIENT_REVALIDATE_MS;
 
       if (needsRefresh) {
         fetchClientMenu(true)
           .then((fresh) => {
             if (cancelled) return;
             if (!fresh || fresh.length === 0) {
-              if (!cachedMenu?.data?.length) {
+              if (!hasCached) {
                 setNotFound(true);
               }
             } else {
-              setData(fresh);
+              setData((prev) =>
+                JSON.stringify(prev) === JSON.stringify(fresh) ? prev : fresh
+              );
             }
             setLoading(false);
           })
           .catch((err) => {
             console.error("Error fetching menu data:", err);
             if (!cancelled) {
-              if (!cachedMenu?.data?.length) {
+              if (!hasCached) {
                 setNotFound(true);
               }
               setLoading(false);
@@ -278,7 +328,7 @@ export default function MenuPageClient({
         <NavBar
           isViewOnly={!isOrderPage}
           initialSettings={settings}
-          initialConfig={initialConfig}
+          initialConfig={config}
         />
 
         <ul
@@ -509,4 +559,3 @@ export default function MenuPageClient({
     </Provider>
   );
 }
-

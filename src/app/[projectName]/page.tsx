@@ -1,8 +1,9 @@
 import TableSelectionClient from "@/components/TableSelectionClient";
-import { getServerTables } from "@/lib/api";
 
-export default async function TableSelectionPage() {
-  const tables = await getServerTables();
+export function generateStaticParams() {
+  return [{ projectName: "u" }];
+}
 
-  return <TableSelectionClient initialTables={tables} />;
+export default function TableSelectionPage() {
+  return <TableSelectionClient initialTables={null} />;
 }
