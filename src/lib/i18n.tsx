@@ -14,7 +14,7 @@ type I18nContextValue = {
 
 const defaultContext: I18nContextValue = {
   locale: "kh",
-  setLocale: () => {},
+  setLocale: () => { },
   t: (k: string) => k,
 };
 
@@ -52,7 +52,7 @@ export function I18nProvider({
       const cur = LOCALES["kh"] || {};
       return cur[key] ?? LOCALES.en[key] ?? key;
     };
-  }, [locale]);
+  }, []);
 
   return (
     <I18nContext.Provider value={{ locale: "kh", setLocale, t }}>

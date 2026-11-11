@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-// Import Swiper React components and modules
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -15,7 +14,6 @@ const NightFoodBanner: React.FC<PropType> = ({ images, imgUrl }) => {
   if (!images || images.length === 0) return null;
 
   return (
-    /*Banner comment*/
     <div className="night-food-banner mb-4 w-full rounded-xl overflow-hidden" style={{ height: "250px" }}>
       <Swiper
         spaceBetween={30}
@@ -24,21 +22,17 @@ const NightFoodBanner: React.FC<PropType> = ({ images, imgUrl }) => {
           delay: 3000,
           disableOnInteraction: false,
         }}
-        // pagination={{
-        //   clickable: true,
-        //   renderBullet: function (index, className) {
-        //     return `<span class="${className} !bg-black"></span>`;
-        //   },
-        // }}
         modules={[Autoplay, Pagination]}
         className="mySwiper w-full h-full"
       >
         {images.map((image, index) => (
-          <SwiperSlide key={index} className="w-full h-full bg-gray-100 overflow-hidden">
+          <SwiperSlide key={image || index} className="w-full h-full bg-gray-100 overflow-hidden">
             <img
               className="object-cover w-full h-full"
               src={`${imgUrl}${image}`}
               alt={`Night food banner ${index + 1}`}
+              loading={index === 0 ? "eager" : "lazy"}
+              decoding="async"
             />
           </SwiperSlide>
         ))}
@@ -47,5 +41,4 @@ const NightFoodBanner: React.FC<PropType> = ({ images, imgUrl }) => {
   );
 };
 
-export default NightFoodBanner;
-
+export default React.memo(NightFoodBanner);

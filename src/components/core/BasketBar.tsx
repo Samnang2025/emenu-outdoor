@@ -20,7 +20,7 @@ export default function BasketBar({ cur, historyOrder }: any) {
           onClick={() => {
             // Show modal only if there are items in the basket
 
-            (document.getElementById("my_modal_3") as HTMLDialogElement).showModal();
+            (document.getElementById("my_modal_3") as HTMLDialogElement | null)?.showModal();
           }
           }
         >

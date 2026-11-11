@@ -1,131 +1,124 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import React, { useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import "@/app/globals.css";
 import { Menu } from "@/types/model";
 import { addToCart } from "@/lib/cart/cartSlice";
 import { RootState } from "@/lib/store";
-import { useParams } from "next/navigation";
 import numeral from "numeral";
 import { useTranslation } from "@/lib/i18n";
-import FoodItemModal from "./FoodItemModal"; // Sok Thean popup Cofmponent
+import { IMG_BASE_URL } from "@/lib/api";
+import FoodItemModal from "./FoodItemModal";
 
 type PropType = {
   cartItem: Menu;
   isOrderPage?: boolean;
-  cur?: any
+  cur?: any;
+  priority?: boolean;
 };
 
-
-export default function Cart({ cartItem, isOrderPage, cur }: PropType) {
-  //AKK Translation
+function Cart({ cartItem, isOrderPage, cur, priority = false }: PropType) {
   const { locale } = useTranslation();
-  const { id, name, second_name, imagePath, price, promo_price, code, type, subcategory, brand } = cartItem; //Sok Thean Subcategory
+  const { id, name, second_name, imagePath, price, promo_price, code, type, subcategory, brand } = cartItem;
 
-  const displayName = (locale === 'en' && second_name) ? second_name : name;
-  //End AKK Translation
+  const displayName = locale === "en" && second_name ? second_name : name;
   const real_price = numeral(promo_price).format("0.[00]");
   const actual_price = numeral(price).format("0.[00]");
 
-  const { projectName } = useParams();
   const dispatch = useDispatch();
-  const cart = useSelector((state: RootState) => state.cart);
+  // Select only the scalar quantity for this item so unrelated cart updates do not re-render every card
+  const currentQuantity = useSelector((state: RootState) =>
+    isOrderPage
+      ? state.cart.items.reduce((sum, item) => (item.id === id ? sum + item.quantity : sum), 0)
+      : 0
+  );
 
-  // Find existing items in cart and sum their quantities
-  const currentQuantity = cart.items
-    .filter((item) => item.id === id)
-    .reduce((sum, item) => sum + item.quantity, 0);
-  const [eachItemOrderNumber, setOrderItem] = useState(currentQuantity);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [isModalOpen, setIsModalOpen] = useState(false); // Sok Thean popup Component
-
-  // Base URL for image
-  const imgUrl = `https://pos-outdoor.tsdsolution.net/assets/uploads/`;
-
-  // Handle adding item to cart
-  const handleOrder = (comment?: string) => { //Sok Thean Add comment
-    setOrderItem((prev) => prev + 1); // Increment local quantity state
-    const cartData = {
-      id,
-      name,
-      second_name, //AKK Translation
-      imagePath,
-      price,
-      quantity: eachItemOrderNumber + 1,
-      promo_price,
-      code,
-      type,
-      //Sok Thean Subcategory
-      subcategory,
-      brand,
-      comment: comment || null, //Sok Thean Add comment
-    };
-
-    dispatch(addToCart(cartData)); // Dispatch action to add item to Redux store
-  };
-
-  // Reset local quantity state when currentQuantity changes
-  useEffect(() => {
-    setOrderItem(currentQuantity);
-  }, [currentQuantity]);
+  const handleOrder = useCallback(
+    (comment?: string) => {
+      const cartData = {
+        id,
+        name,
+        second_name,
+        imagePath,
+        price,
+        quantity: currentQuantity + 1,
+        promo_price,
+        code,
+        type,
+        subcategory,
+        brand,
+        comment: comment || null,
+      };
+      dispatch(addToCart(cartData));
+    },
+    [id, name, second_name, imagePath, price, currentQuantity, promo_price, code, type, subcategory, brand, dispatch]
+  );
 
   return (
     <>
       <div className="card w-[49%]">
-        <div className="w-full rounded-xl overflow-hidden relative">
-          <button onClick={() => setIsModalOpen(true)} className="w-full h-full"> {/* Sok Thean popup Component */}
+        <div className="w-full rounded-xl overflow-hidden relative bg-gray-100">
+          <button onClick={() => setIsModalOpen(true)} className="w-full h-full">
             <img
               className="object-cover w-full h-[200px]"
-              src={`${imgUrl}${cartItem.imagePath}`}
-              alt={cartItem.name}
+              src={`${IMG_BASE_URL}${imagePath}`}
+              alt={name}
               width={250}
               height={250}
+              loading={priority ? "eager" : "lazy"}
+              decoding="async"
+              fetchPriority={priority ? "high" : "auto"}
             />
           </button>
-          {/* Button to add item to basket (visible only if isOrderPage is true) */}
           {isOrderPage && (
             <button
-              // Sok Thean popup Component
-              className={`absolute bottom-2 right-2 flex justify-center items-center w-[40px] h-[40px] rounded-full z-20 border-2 border-white shadow-lg transition-all active:scale-90 ${eachItemOrderNumber > 0 ? "bg-black text-white" : "bg-white text-black"
-                }`}
+              className={`absolute bottom-2 right-2 flex justify-center items-center w-[40px] h-[40px] rounded-full z-20 border-2 border-white shadow-lg transition-all active:scale-90 ${
+                currentQuantity > 0 ? "bg-black text-white" : "bg-white text-black"
+              }`}
               onClick={(e) => {
                 e.stopPropagation();
                 setIsModalOpen(true);
               }}
-            // End popup Component
             >
-              {eachItemOrderNumber > 0 ? eachItemOrderNumber : "+"}
+              {currentQuantity > 0 ? currentQuantity : "+"}
             </button>
           )}
         </div>
-        <div className="card-body px-1 py-1 flex justify-between items-start gap-y-0 cursor-pointer" onClick={() => setIsModalOpen(true)}> {/* Sok Thean popup Component */}
+        <div
+          className="card-body px-1 py-1 flex justify-between items-start gap-y-0 cursor-pointer"
+          onClick={() => setIsModalOpen(true)}
+        >
           <h2 className="card-title text-[16px] font-battambong font-extralight leading-tight text-black">
             {displayName}
           </h2>
           <div className="flex flex-col items-end">
             <span className="text-[15px] text-black font-bold whitespace-nowrap">
-              {cur || "$"}{promo_price ? real_price : actual_price}
+              {cur || "$"}
+              {promo_price ? real_price : actual_price}
             </span>
             {promo_price && (
               <span className="text-[13px] text-gray-500 line-through">
-                {cur || "$"}{actual_price}
+                {cur || "$"}
+                {actual_price}
               </span>
             )}
           </div>
         </div>
       </div>
-      {/* Sok Thean popup Component */}
-      <FoodItemModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        cartItem={cartItem}
-        cur={cur}
-        onAdd={(comment) => handleOrder(comment)} //Sok Thean Add comment
-        imgUrl={imgUrl}
-        isOrderPage={isOrderPage}
-      />
-      {/* End popup Component */}
+      {isModalOpen && (
+        <FoodItemModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          cartItem={cartItem}
+          cur={cur}
+          onAdd={handleOrder}
+          imgUrl={IMG_BASE_URL}
+          isOrderPage={isOrderPage}
+        />
+      )}
     </>
   );
 }
+
+export default React.memo(Cart);
