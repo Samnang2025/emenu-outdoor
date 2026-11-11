@@ -21,6 +21,8 @@ export default function Footer() {
         src="/images/TSD-logo.svg"
         width={200}
         height={200}
+        loading="lazy"
+        decoding="async"
         alt=""
       />
       <div className="flex flex-row gap-10">
@@ -69,6 +71,8 @@ export default function Footer() {
             alt=""
             width={200}
             height={200}
+            loading="lazy"
+            decoding="async"
           />
         </Link>
       </div>

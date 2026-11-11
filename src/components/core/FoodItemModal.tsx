@@ -1,10 +1,9 @@
 // Sok Thean popup Component
 "use client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import { Menu } from "@/types/model";
 import numeral from "numeral";
-import { useTranslation } from "@/lib/i18n"; //AKK Translation
+import { useTranslation } from "@/lib/i18n";
 import { createPortal } from "react-dom";
 
 type PropType = {
@@ -29,23 +28,15 @@ const FoodItemModal: React.FC<PropType> = ({
   const [comment, setComment] = useState("");
   const [sugarLevel, setSugarLevel] = useState("");
   const [iceLevel, setIceLevel] = useState("");
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
-
-  //AKK Translation
   const { locale, t } = useTranslation();
 
   const { name, second_name, imagePath, price, promo_price, brand } = cartItem;
-  const displayName = (locale === 'en' && second_name) ? second_name : name;
-  //End AKK Translation
+  const displayName = locale === "en" && second_name ? second_name : name;
   const real_price = numeral(promo_price).format("0.[00]");
   const actual_price = numeral(price).format("0.[00]");
 
-  if (!isOpen || !mounted) return null;
+  if (!isOpen || typeof document === "undefined") return null;
 
   const handleAdd = () => {
     let finalComment = comment;
@@ -53,7 +44,7 @@ const FoodItemModal: React.FC<PropType> = ({
       const selections = [];
       if (sugarLevel) selections.push(`Sugar: ${sugarLevel}`);
       if (iceLevel) selections.push(`Ice: ${iceLevel}`);
-      
+
       if (selections.length > 0) {
         const customization = `[${selections.join(", ")}]`;
         finalComment = comment ? `${customization} ${comment}` : customization;
@@ -62,24 +53,33 @@ const FoodItemModal: React.FC<PropType> = ({
     if (onAdd) {
       onAdd(finalComment);
     }
-    setComment(""); // Reset comment after adding
-    setSugarLevel(""); // Reset sugar
-    setIceLevel(""); // Reset ice
+    setComment("");
+    setSugarLevel("");
+    setIceLevel("");
     onClose();
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300" onClick={onClose}>
-      <div 
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"
+      onClick={onClose}
+    >
+      <div
         className="bg-white w-full max-w-md rounded-2xl overflow-hidden shadow-2xl relative animate-in zoom-in-90 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
-        <button 
+        <button
           onClick={onClose}
           className="absolute right-4 top-4 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-colors"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 text-gray-800"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
@@ -89,6 +89,7 @@ const FoodItemModal: React.FC<PropType> = ({
           <img
             src={`${imgUrl}${imagePath}`}
             alt={name}
+            decoding="async"
             className="w-full h-full object-cover"
           />
         </div>
@@ -101,11 +102,13 @@ const FoodItemModal: React.FC<PropType> = ({
             </h2>
             <div className="flex flex-col items-end shrink-0 pt-1">
               <span className="text-2xl text-start font-bold text-black">
-                {cur || "$"}{promo_price ? real_price : actual_price}
+                {cur || "$"}
+                {promo_price ? real_price : actual_price}
               </span>
               {promo_price && (
                 <span className="text-sm text-gray-400 line-through">
-                  {cur || "$"}{actual_price}
+                  {cur || "$"}
+                  {actual_price}
                 </span>
               )}
             </div>
@@ -120,7 +123,7 @@ const FoodItemModal: React.FC<PropType> = ({
                   {t("sugarLevelLabel")}
                 </label>
                 <div className="flex flex-wrap gap-2">
-                  {["0%","10%","20%","30%", "50%","70%","80%","100%"].map((level) => (
+                  {["0%", "10%", "20%", "30%", "50%", "70%", "80%", "100%"].map((level) => (
                     <button
                       key={level}
                       onClick={() => setSugarLevel(sugarLevel === level ? "" : level)}
@@ -163,7 +166,10 @@ const FoodItemModal: React.FC<PropType> = ({
           {/* Comment Field (Ordering mode only) */}
           {isOrderPage && (
             <div className="mb-2">
-              <label htmlFor="item-comment" className="block text-sm font-battambong font-semibold text-gray-700 mb-2">
+              <label
+                htmlFor="item-comment"
+                className="block text-sm font-battambong font-semibold text-gray-700 mb-2"
+              >
                 {t("optionalCommentLabel")}
               </label>
               <textarea
@@ -183,10 +189,18 @@ const FoodItemModal: React.FC<PropType> = ({
               onClick={handleAdd}
               className="w-full bg-black text-white py-4 rounded-xl font-bold text-lg hover:bg-black/90 transition-transform active:scale-95 flex items-center justify-center gap-2"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
-              <span className="font-battambong" style={{"fontWeight": "normal"}}>{t("addToBasketLabel")}</span>
+              <span className="font-battambong" style={{ fontWeight: "normal" }}>
+                {t("addToBasketLabel")}
+              </span>
             </button>
           ) : (
             <button
