@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useLayoutEffect, useMemo, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n";
 import { Loading } from "@/components/core";
@@ -10,8 +10,11 @@ import {
   fetchClientOrderConfig,
   fetchClientSettings,
   fetchClientTables,
+  getCachedClientEntry,
   seedClientCache,
 } from "@/lib/clientApi";
+
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 type TableView = {
   id: string;
@@ -82,11 +85,12 @@ function mapRawTables(raw: RawTableRecord[]): TableView[] {
 }
 
 type TableSelectionClientProps = {
-  initialTables: RawTableRecord[] | null;
+  initialTables?: RawTableRecord[] | null;
 };
 
-export default function TableSelectionClient({ initialTables }: TableSelectionClientProps) {
+export default function TableSelectionClient({ initialTables = null }: TableSelectionClientProps) {
   const { projectName } = useParams();
+  const resolvedProject = Array.isArray(projectName) ? projectName[0] : projectName;
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -96,9 +100,20 @@ export default function TableSelectionClient({ initialTables }: TableSelectionCl
     initialTables && initialTables.length > 0 ? mapRawTables(initialTables) : []
   );
   const [selectedZone, setSelectedZone] = useState("All");
+  const prefetchedRoutes = useRef<Set<string>>(new Set());
+
+  useIsomorphicLayoutEffect(() => {
+    if (!hasInitialTables) {
+      const cached = getCachedClientEntry<RawTableRecord[]>("tables")?.data;
+      if (Array.isArray(cached) && cached.length > 0) {
+        setTables(mapRawTables(cached));
+        setLoading(false);
+      }
+    }
+  }, [hasInitialTables]);
 
   useEffect(() => {
-    if (!projectName) {
+    if (!resolvedProject) {
       setLoading(false);
       return;
     }
@@ -108,18 +123,19 @@ export default function TableSelectionClient({ initialTables }: TableSelectionCl
     }
 
     let cancelled = false;
-    // Refresh live occupied status in background without blocking initial display
+    const hasCached = Boolean(getCachedClientEntry<RawTableRecord[]>("tables")?.data?.length);
+
     fetchClientTables(true)
       .then((fresh) => {
         if (cancelled) return;
         if (Array.isArray(fresh) && fresh.length > 0) {
           setTables(mapRawTables(fresh));
-        } else if (!hasInitialTables) {
+        } else if (!hasInitialTables && !hasCached) {
           setTables(FALLBACK_TABLES);
         }
       })
       .catch(() => {
-        if (!cancelled && !hasInitialTables) {
+        if (!cancelled && !hasInitialTables && !hasCached) {
           setTables(FALLBACK_TABLES);
         }
       })
@@ -132,20 +148,28 @@ export default function TableSelectionClient({ initialTables }: TableSelectionCl
     return () => {
       cancelled = true;
     };
-  }, [projectName, hasInitialTables, initialTables]);
+  }, [resolvedProject, hasInitialTables, initialTables]);
 
   // Warm menu route & data cache during idle time while user selects a table
   useEffect(() => {
-    if (!projectName) return;
-    const proj = Array.isArray(projectName) ? projectName[0] : projectName;
+    if (!resolvedProject) return;
     const timer = window.setTimeout(() => {
-      router.prefetch(`/${proj}/menu`);
+      router.prefetch(`/${resolvedProject}/menu`);
       fetchClientMenu().catch(() => {});
       fetchClientSettings().catch(() => {});
       fetchClientOrderConfig().catch(() => {});
-    }, 300);
+    }, 150);
     return () => window.clearTimeout(timer);
-  }, [projectName, router]);
+  }, [resolvedProject, router]);
+
+  const prefetchTableRoute = useCallback(
+    (tableId: string) => {
+      if (!resolvedProject || prefetchedRoutes.current.has(tableId)) return;
+      prefetchedRoutes.current.add(tableId);
+      router.prefetch(`/${resolvedProject}/${tableId}`);
+    },
+    [resolvedProject, router]
+  );
 
   const zones = useMemo(() => {
     const uniqueZones = Array.from(new Set(tables.map((tbl) => tbl.zone)));
@@ -158,7 +182,7 @@ export default function TableSelectionClient({ initialTables }: TableSelectionCl
   }, [selectedZone, tables]);
 
   const handleTableSelect = (tableId: string) => {
-    router.push(`/${projectName}/${tableId}`);
+    router.push(`/${resolvedProject}/${tableId}`);
   };
 
   if (loading) {
@@ -172,7 +196,7 @@ export default function TableSelectionClient({ initialTables }: TableSelectionCl
       <div className="w-full max-w-[575px] flex flex-col items-center text-center mt-4 mb-6">
         <p className="text-lg text-red-500 mt-2 max-w-[80%]">{t("selectTableSubtitle")}</p>
         <button
-          onClick={() => router.push(`/${projectName}/menu`)}
+          onClick={() => router.push(`/${resolvedProject}/menu`)}
           className="mt-3 inline-flex items-center gap-2 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 shadow-sm px-4 py-2 rounded-full text-sm font-medium transition-all hover:border-black"
         >
           <svg
@@ -230,6 +254,8 @@ export default function TableSelectionClient({ initialTables }: TableSelectionCl
                 return (
                   <button
                     key={table.id}
+                    onMouseEnter={() => prefetchTableRoute(table.id)}
+                    onTouchStart={() => prefetchTableRoute(table.id)}
                     onClick={() => handleTableSelect(table.id)}
                     className={`group relative flex flex-col justify-center items-center py-6 px-3 border rounded-2xl transition-all duration-300 hover:scale-[1.04] active:scale-[0.97] shadow-sm ${
                       isOccupied
@@ -309,4 +335,3 @@ export default function TableSelectionClient({ initialTables }: TableSelectionCl
     </div>
   );
 }
-
