@@ -14,7 +14,7 @@ type I18nContextValue = {
 
 const defaultContext: I18nContextValue = {
   locale: "kh",
-  setLocale: () => {},
+  setLocale: () => { },
   t: (k: string) => k,
 };
 
