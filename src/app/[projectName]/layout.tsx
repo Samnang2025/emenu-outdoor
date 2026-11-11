@@ -3,8 +3,6 @@ import type { Metadata } from "next";
 import "../globals.css";
 import I18nProvider from "@/lib/i18n";
 import "../../../public/fonts/style.css";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { getServerSettings, IMG_BASE_URL } from "@/lib/api";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -41,7 +39,6 @@ export default function RootLayout({
       <body className="m-auto max-w-[575px]">
         <div className=" h-screen bg-white overflow-auto max-w-[575px] w-full ">
           <I18nProvider>
-            <ToastContainer />
             {children}
           </I18nProvider>
         </div>

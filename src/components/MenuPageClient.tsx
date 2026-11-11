@@ -1,10 +1,11 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { Provider } from "react-redux";
 import store from "@/lib/store";
 import { Menu, MenuType, orderHistoryType } from "@/types/model";
 import { useParams } from "next/navigation";
-import { ImageSlider, Model, NotFound, SearchBar } from "@/components/";
+import { ImageSlider, NotFound, SearchBar } from "@/components/";
 import {
   Cart,
   BasketBar,
@@ -15,7 +16,9 @@ import {
   NightFoodCart,
   NightFoodBanner,
 } from "@/components/core";
-import OrderItem from "@/components/OrderItem";
+
+const OrderItem = dynamic(() => import("@/components/OrderItem"), { ssr: false });
+const Model = dynamic(() => import("@/components/Model"), { ssr: false });
 import {
   IMG_BASE_URL,
   OrderConfig,
@@ -479,7 +482,7 @@ export default function MenuPageClient({
             <button
               onClick={() => {
                 try {
-                  (document.getElementById("my_modal_10") as HTMLDialogElement).showModal();
+                  (document.getElementById("my_modal_10") as HTMLDialogElement | null)?.showModal();
                 } catch (error) {
                   console.error("Error opening modal:", error);
                 }

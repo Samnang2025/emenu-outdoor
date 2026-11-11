@@ -7,7 +7,8 @@ import { clearCart } from "@/lib/cart/cartSlice";
 import HistoryOrder from "./HistoryOrder";
 import numeral from "numeral";
 import { useParams } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "@/lib/i18n";
 import { RawTableRecord } from "@/lib/api";
 import { fetchClientTables, getCachedClientEntry, submitTableOrder } from "@/lib/clientApi";
@@ -110,6 +111,7 @@ export default function OrderItem({
 
   return (
     <>
+      <ToastContainer />
       <dialog id="my_modal_3" className="modal backdrop-blur-[2px]">
         <div className="modal-box p-0 bg-white text-gray-900">
           <form method="dialog">

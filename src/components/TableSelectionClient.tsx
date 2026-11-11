@@ -5,7 +5,13 @@ import { useParams, useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n";
 import { Loading } from "@/components/core";
 import { RawTableRecord } from "@/lib/api";
-import { fetchClientTables, seedClientCache } from "@/lib/clientApi";
+import {
+  fetchClientMenu,
+  fetchClientOrderConfig,
+  fetchClientSettings,
+  fetchClientTables,
+  seedClientCache,
+} from "@/lib/clientApi";
 
 type TableView = {
   id: string;
@@ -127,6 +133,19 @@ export default function TableSelectionClient({ initialTables }: TableSelectionCl
       cancelled = true;
     };
   }, [projectName, hasInitialTables, initialTables]);
+
+  // Warm menu route & data cache during idle time while user selects a table
+  useEffect(() => {
+    if (!projectName) return;
+    const proj = Array.isArray(projectName) ? projectName[0] : projectName;
+    const timer = window.setTimeout(() => {
+      router.prefetch(`/${proj}/menu`);
+      fetchClientMenu().catch(() => {});
+      fetchClientSettings().catch(() => {});
+      fetchClientOrderConfig().catch(() => {});
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [projectName, router]);
 
   const zones = useMemo(() => {
     const uniqueZones = Array.from(new Set(tables.map((tbl) => tbl.zone)));
